@@ -5,10 +5,14 @@ layout (location = 1) in vec4 a_col;
 
 out vec4 v_col;
 
+uniform mat4 u_model = mat4(1.0);
+uniform mat4 u_proj = mat4(1.0);
+uniform mat4 u_view = mat4(1.0);
+
 void main()
 {
     v_col = a_col;
-    gl_Position = vec4(a_pos, 1.0);
+    gl_Position = u_proj * u_view * u_model * vec4(a_pos, 1.0);
 }
 
 .fragment

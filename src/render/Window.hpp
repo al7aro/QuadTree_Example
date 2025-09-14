@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "debug.hpp"
+#include "Camera.hpp"
 
 namespace FT {
 
@@ -64,6 +65,16 @@ namespace FT {
 		void SwapBuffers()
 		{
 			glfwSwapBuffers(_window);
+		}
+
+		void SetTitleSuffix(const std::string& suffix)
+		{
+			glfwSetWindowTitle(_window, std::string(_title + suffix).c_str());
+		}
+
+		GLFWwindow* GetWindowPtr() const
+		{
+			return (_window);
 		}
 	};
 

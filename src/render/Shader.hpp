@@ -3,6 +3,7 @@
 #include <string>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace FT {
 
@@ -37,6 +38,12 @@ namespace FT {
             glCompileShader(sh);
             glAttachShader(_id, sh);
             glDeleteShader(sh);
+        }
+
+        void SetMat4(const std::string& name, const glm::mat4& m) const
+        {
+            unsigned int loc = glGetUniformLocation(_id, name.c_str());
+            glProgramUniformMatrix4fv(_id, loc, 1, GL_FALSE, glm::value_ptr(m));
         }
     };
 
