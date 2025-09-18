@@ -17,6 +17,9 @@ namespace FT {
             _id = glCreateProgram();
         }
 
+        Shader(const Shader& other) { _id = other._id; }
+		void operator=(const Shader& other) { _id = other._id; }
+
         Shader(const std::string& v_src, const std::string& f_src)
             : Shader()
         {

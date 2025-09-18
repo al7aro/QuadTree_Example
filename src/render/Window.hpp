@@ -7,11 +7,10 @@
 #include <GLFW/glfw3.h>
 
 #include "debug.hpp"
+#include "Quad.hpp"
 #include "Camera.hpp"
 
 namespace FT {
-
-
 
 	class Window
 	{
@@ -19,9 +18,11 @@ namespace FT {
 		GLFWwindow* _window;
 		std::string _title;
 		int _width, _height;
+		double _mouse_x_pos, _mouse_y_pos;
 	public:
 		Window(int width, int height, const std::string& title)
-			: _window(nullptr), _width(width), _height(height), _title(title)
+			: _window(nullptr), _width(width), _height(height), _title(title),
+			_mouse_x_pos(0.0), _mouse_y_pos(0.0)
 		{
 			/* Init GLFW */
 			glfwInit();
@@ -40,6 +41,7 @@ namespace FT {
 			{
 				std::println("ERROR: GLAD initialization.");
 			}
+			//glfwSwapInterval(0);
 			/* DEBUG CALLBACK */
 			glEnable(GL_DEBUG_OUTPUT);
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -50,6 +52,17 @@ namespace FT {
 		~Window()
 		{
 			glfwTerminate();
+		}
+
+		glm::vec2 GetMousePosWindow() const
+		{
+			return (glm::vec2(_mouse_x_pos, _mouse_y_pos));
+		}
+
+		void MouseMoveCallback(double xpos, double ypos)
+		{
+			_mouse_x_pos = xpos;
+			_mouse_y_pos = ypos;
 		}
 
 		bool ShouldClose()
@@ -75,6 +88,35 @@ namespace FT {
 		GLFWwindow* GetWindowPtr() const
 		{
 			return (_window);
+		}
+
+		void SetCursorCallback(GLFWcursorposfun cb)
+		{
+			glfwSetCursorPosCallback(_window, cb);
+		}
+
+		void SetScrollCallback(GLFWscrollfun cb)
+		{
+			glfwSetScrollCallback(_window, cb);
+		}
+
+		void SetUserPointer(void* ptr)
+		{
+			glfwSetWindowUserPointer(_window, ptr);
+		}
+
+		void GetUserPointer(void** ptr)
+		{
+			*ptr = glfwGetWindowUserPointer(_window);
+		}
+
+		bool MouseIntersects(const Camera2D& cam, const Quad& quad) const
+		{
+			glm::vec2 view_mouse_pos = cam.WindowToView(glm::vec2(_mouse_x_pos, _mouse_y_pos));
+			glm::vec4 col = quad.col;
+			if (quad.Contains(view_mouse_pos))
+				return (true);
+			return (false);
 		}
 	};
 

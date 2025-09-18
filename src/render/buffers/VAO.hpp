@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../Vertex.hpp"
+#include "../Quad.hpp"
 #include "VBO.hpp"
 #include "IBO.hpp"
 

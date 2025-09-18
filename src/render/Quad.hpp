@@ -5,13 +5,36 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "Vertex.hpp"
-
 namespace FT {
 
-    class Quad
+    struct Vertex
     {
-    public:
+        glm::vec3 position;
+        glm::vec4 color;
+        glm::vec2 tex_coords;
+    };
+
+    struct Quad
+    {
+		glm::vec2 pos;
+		glm::vec2 size;
+		glm::vec4 col;
+        Quad(const glm::vec2& p_pos, const glm::vec2& p_size, const glm::vec4& p_col)
+            : pos(p_pos), size(p_size), col(p_col)
+        {}
+        virtual ~Quad() {}
+        virtual bool Contains(const glm::vec2& p) const
+        {
+            if (size.x <= 0.0 || size.y <= 0.0)
+                return (false);
+            if (pos.x + size.x/2.0f >= p.x &&
+                pos.y + size.y/2.0f >= p.y &&
+                pos.x - size.x/2.0f <= p.x &&
+                pos.y - size.y/2.0f <= p.y)
+                return (true);
+            return (false);
+        }
+
         static std::array<Vertex, 4> gen_vertices(
             glm::vec2 pos = glm::vec2(0.0),
             glm::vec2 size = glm::vec2(1.0),

@@ -20,20 +20,22 @@ namespace FT {
         VAO _vao;
         VBO _vbo;
         IBO _ibo;
+        Shader _shader;
         unsigned int _index_count;
         unsigned int _vertex_count;
         unsigned int _num_of_batches;
         
     public:
         Renderer2D()
-            : _vao(), _vbo(BATCH_SIZE), _ibo(BATCH_SIZE), _index_count(0), _vertex_count(0), _num_of_batches(0)
+            : _vao(), _vbo(BATCH_SIZE), _ibo(BATCH_SIZE), _shader(), _index_count(0), _vertex_count(0), _num_of_batches(0)
         {
             _vao.AddVBO(_vbo);
             _vao.AddIBO(_ibo);
         }
 
-        void Begin()
+        void Begin(const Shader& sh)
         {
+            _shader = sh;
             _num_of_batches = 0;
         }
 
@@ -42,9 +44,13 @@ namespace FT {
 		    Flush();
         }
 
-        void DrawQuad(const glm::vec2& pos = glm::vec2(0.0),
-                      const glm::vec2& size = glm::vec2(1.0),
-                      const glm::vec4& col = glm::vec4(1.0))
+
+        void DrawQuad(const Quad& quad)
+        {
+            DrawQuad(quad.pos, quad.size, quad.col);
+        }
+
+        void DrawQuad(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& col)
         {
             if (sizeof(Vertex) * (_vertex_count + 4) > BATCH_SIZE)
             {
@@ -61,6 +67,7 @@ namespace FT {
         void Flush()
         {
             _vao.Bind();
+            _shader.Bind();
             glDrawElements(GL_TRIANGLES, _index_count, GL_UNSIGNED_INT, 0);
             _num_of_batches++;
             Clear();

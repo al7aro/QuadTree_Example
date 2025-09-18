@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+#include <functional>
 
 #include <glm/glm.hpp>
 
@@ -84,10 +85,32 @@ namespace FT {
         }
 
         /* FUNCTION THAT DOES NOT RETURN A VECTOR BUT INSTEAD APPLIES A FUNCTION TO ALL MATCHES */
-        // void MapRange(const AABB& bb)
-        // {
-
-        // }
+        int QueryMap(const AABB& bb, std::function<void(const T&)> callback)
+        {
+            int ret = 0;
+            if (bb.Intersects(_bb))
+            {
+                for (auto& d : _data)
+                {
+                    if (bb.Contains(d.first))
+                    {
+                        if (bb.Contains(d.second.pos))
+                        {
+                            callback(d.second);
+                            ret++;
+                        }
+                    }
+                }
+                if (_subdivided)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        ret += _nodes[i]->QueryMap(bb, callback);
+                    }
+                }
+            }
+            return (ret);
+        }
 
         /* Returns all object inside bb */
         std::vector<T> QueryRange(const AABB& bb)
@@ -96,7 +119,7 @@ namespace FT {
 
             if (bb.Intersects(_bb))
             {
-                for (auto d : _data)
+                for (auto& d : _data)
                 {
                     if (bb.Contains(d.first))
                         ret.push_back(d.second);

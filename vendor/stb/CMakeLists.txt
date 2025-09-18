@@ -24,4 +24,4 @@ set_target_properties(stb PROPERTIES
 	FOLDER vendor
 )
 
-target_include_directories(stb PUBLIC "./stb/include/glad")
+target_include_directories(stb PUBLIC "./stb/include/")

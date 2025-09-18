@@ -5,6 +5,8 @@
 #include <sstream>
 #include <fstream>
 
+#include <stb_image.h>
+
 namespace FT {
 
     enum ShaderType
@@ -42,6 +44,26 @@ namespace FT {
                 src.data[current_shader].append(line + "\n");
         }
         return (src);
+    }
+
+    struct TexData
+    {
+        int w;
+        int h;
+        int chn;
+        void* data;
+    };
+
+    TexData load_image(const std::string& path)
+    {
+        int w;
+        int h;
+        int chn;
+        TexData data;
+        data.data = stbi_load(path.c_str(), &data.w, &data.h, &data.chn, 4);
+        if (data.data)
+            stbi_image_free(data.data);
+        return (data);
     }
 
 }

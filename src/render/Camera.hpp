@@ -25,6 +25,11 @@ namespace FT {
 
         int window_width;
         int window_height;
+            
+        Camera2D(int p_width, int p_height)
+            : window_width(p_width), window_height(p_height)
+        {
+		}
 
         glm::mat4 GetProjMatrix()
         {
@@ -54,7 +59,7 @@ namespace FT {
                 rotation -= rot_speed * delta_time;
             if (zoom_offset)
             {
-                bb.half_size = glm::clamp(bb.half_size + zoom_offset * zoom_speed * delta_time, 0.1f, 3.0f);
+                bb.half_size = glm::clamp(bb.half_size + zoom_offset * zoom_speed * delta_time, 0.01f, 3.0f);
                 zoom_offset = 0.0;
             }
         }
