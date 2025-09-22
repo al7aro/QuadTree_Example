@@ -21,7 +21,7 @@ namespace FT {
         VBO _vbo;
         IBO _ibo;
         Shader _shader;
-        std::array<const Texture2D*, 8> _textures;
+        std::array<Texture2D, 8> _textures;
         unsigned int _index_count;
         unsigned int _vertex_count;
         unsigned int _tex_count;
@@ -65,14 +65,14 @@ namespace FT {
                 // Check if that texture is already in use in this renderer
                 for (int i = 0; i < _tex_count; i++)
                 {
-                    if (_textures[i]->GetId() == tex.GetId())
+                    if (_textures[i].GetId() == tex.GetId())
                     {
                         tex_id = i;
                     }
                 }
                 if (tex_id < 0) /* if texture is not used yet */
                 {
-                    _textures[_tex_count] = &tex;
+                    _textures[_tex_count] = tex;
                     tex_id = _tex_count;
                     _tex_count++;
                 }
@@ -96,7 +96,7 @@ namespace FT {
             _shader.Bind();
             for (int i = 0; i < _tex_count; i++)
             {
-                glBindTextureUnit(i, _textures[i]->GetId());
+                glBindTextureUnit(i, _textures[i].GetId());
                 _shader.SetInt(std::string("u_textures2D[" + std::to_string(i) + "]").c_str(), i);
             }
             glDrawElements(GL_TRIANGLES, _index_count, GL_UNSIGNED_INT, 0);
