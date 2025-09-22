@@ -48,6 +48,12 @@ namespace FT {
             unsigned int loc = glGetUniformLocation(_id, name.c_str());
             glProgramUniformMatrix4fv(_id, loc, 1, GL_FALSE, glm::value_ptr(m));
         }
+
+        void SetInt(const std::string& name, const int& n) const
+        {
+            unsigned int loc = glGetUniformLocation(_id, name.c_str());
+            glProgramUniform1i(_id, loc, n);
+        }
     };
 
 }

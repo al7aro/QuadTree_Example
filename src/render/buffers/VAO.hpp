@@ -33,6 +33,10 @@ namespace FT {
             glEnableVertexArrayAttrib(_id, 2);
             glVertexArrayAttribBinding(_id, 2, bindingindex);
             glVertexArrayAttribFormat(_id, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, tex_coords));
+            /* TEX ID */
+            glEnableVertexArrayAttrib(_id, 3);
+            glVertexArrayAttribBinding(_id, 3, bindingindex);
+            glVertexArrayAttribFormat(_id, 3, 1, GL_FLOAT, GL_FALSE, offsetof(Vertex, tex_id));
         }
         void AddIBO(IBO & ibo)
         {

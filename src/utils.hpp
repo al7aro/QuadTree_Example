@@ -51,18 +51,15 @@ namespace FT {
         int w;
         int h;
         int chn;
-        void* data;
+        unsigned char* data;
     };
 
     TexData load_image(const std::string& path)
     {
-        int w;
-        int h;
-        int chn;
         TexData data;
         data.data = stbi_load(path.c_str(), &data.w, &data.h, &data.chn, 4);
-        if (data.data)
-            stbi_image_free(data.data);
+        //if (data.data)
+            //stbi_image_free(data.data);
         return (data);
     }
 

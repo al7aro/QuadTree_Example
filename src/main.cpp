@@ -73,12 +73,18 @@ int main(void)
 	ShaderSource src = read_shader(ASSETS_DIRECTORY"/basic.glsl");
 	Shader sh(src.data[ShaderType::VERTEX], src.data[ShaderType::FRAGMENT]);
 	TexData data = load_image(ASSETS_DIRECTORY"/grass.jpg");
-	Texture2D tex(data);
+	std::vector<Texture2D> tex_vec;
+	/* Tex to have multiple textures (look similar tho) */
+	for (int i = 0; i < 100; i++)
+	{
+		tex_vec.push_back(Texture2D(data));
+	}
 
 	/* FILL QUAD TREE AND RAW VECTOR */
 	QuadTree<Quad> quad_tree(AABB{glm::vec2(0.0), 10.0}, 7);
 	std::vector<Quad> raw_quads;
 	glm::ivec2 quad_cnt(500.0);
+	int k = 0;
 	for (int i = 0; i <= quad_cnt.x; i++)
 	{
 		for (int j = 0; j <= quad_cnt.y; j++)
@@ -86,8 +92,17 @@ int main(void)
 			glm::vec2 pos(rand_float(-1.0, 1.0), rand_float(-1.0, 1.0));
 			glm::vec2 size(rand_float(0.1, 1.5)/quad_cnt.x, rand_float(0.1, 1.5)/quad_cnt.y);
 			glm::vec4 col(rand_float(), rand_float(), rand_float(), 1.0);
-			quad_tree.Insert(pos, Quad{pos, size, col});
-			raw_quads.push_back(Quad{pos, size, col});
+			if (rand_float(0.0, 1.0) < 0.75)
+			{
+				const Texture2D& tex = tex_vec[k % tex_vec.size()];
+				quad_tree.Insert(pos, Quad{pos, glm::vec2(size.x), tex});
+				raw_quads.push_back(Quad{pos, glm::vec2(size.x), tex});
+			}
+			else
+			{
+				quad_tree.Insert(pos, Quad{ pos, size, col });
+				raw_quads.push_back(Quad{ pos, size, col });
+			}
 		}
 	}
 

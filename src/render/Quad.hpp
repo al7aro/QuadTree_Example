@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "Texture2D.hpp"
+
 namespace FT {
 
     struct Vertex
@@ -12,6 +14,7 @@ namespace FT {
         glm::vec3 position;
         glm::vec4 color;
         glm::vec2 tex_coords;
+        float tex_id;
     };
 
     struct Quad
@@ -19,9 +22,15 @@ namespace FT {
 		glm::vec2 pos;
 		glm::vec2 size;
 		glm::vec4 col;
+        Texture2D tex;
+
         Quad(const glm::vec2& p_pos, const glm::vec2& p_size, const glm::vec4& p_col)
             : pos(p_pos), size(p_size), col(p_col)
         {}
+        Quad(const glm::vec2& p_pos, const glm::vec2& p_size, const Texture2D& p_tex)
+            : pos(p_pos), size(p_size), col(1.0), tex(p_tex)
+        {
+        }
         virtual ~Quad() {}
         virtual bool Contains(const glm::vec2& p) const
         {
@@ -38,7 +47,8 @@ namespace FT {
         static std::array<Vertex, 4> gen_vertices(
             glm::vec2 pos = glm::vec2(0.0),
             glm::vec2 size = glm::vec2(1.0),
-            glm::vec4 col = glm::vec4(1.0))
+            glm::vec4 col = glm::vec4(1.0),
+            float tex_id = -1.0)
         {
             size /= glm::vec2(2.0);
             std::array<Vertex, 4> ret;
@@ -46,18 +56,22 @@ namespace FT {
             ret[0].position = glm::vec3(pos.x - size.x, pos.y - size.y, 0.0);
             ret[0].color = col;
             ret[0].tex_coords = glm::vec2(0.0, 0.0);
+            ret[0].tex_id = tex_id;
             /* BOT RIGHT VERTEX */
             ret[1].position = glm::vec3(pos.x + size.x, pos.y - size.y, 0.0);
             ret[1].color = col;
             ret[1].tex_coords = glm::vec2(1.0, 0.0);
+            ret[1].tex_id = tex_id;
             /* TOP RIGHT VERTEX */
             ret[2].position = glm::vec3(pos.x + size.x, pos.y + size.y, 0.0);
             ret[2].color = col;
             ret[2].tex_coords = glm::vec2(1.0, 1.0);
+            ret[2].tex_id = tex_id;
             /* TOP LEFT VERTEX */
             ret[3].position = glm::vec3(pos.x - size.x, pos.y + size.y, 0.0);
             ret[3].color = col;
             ret[3].tex_coords = glm::vec2(0.0, 1.0);
+            ret[3].tex_id = tex_id;
             return (ret);
         }
 
